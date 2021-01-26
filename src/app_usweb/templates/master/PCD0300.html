@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PCマスタ検索</title>
+
+<!--JS-->
+<script type="text/javascript"
+	th:src="@{/js/common/jquery-3.3.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/common/jquery-ui.js}"></script>
+<script type="text/javascript"
+	th:src="@{/js/common/bootstrap.bundle.js}"></script>
+<script type="text/javascript"
+	th:src="@{/js/common/bootstrap-datepicker.js}"></script>
+<script type="text/javascript"
+	th:src="@{/js/common/bootstrap-datepicker.ja.min.js}"></script>
+<script type="text/javascript"
+	th:src="@{/js/common/bootstrap-select.js}"></script>
+<script type="text/javascript" th:src="@{/js/common/common.js}"></script>
+
+<!--CSS-->
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/common/bootstrap.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/common/bootstrap3icons.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/common/bootstrap-theme.min.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/common/bootstrap-datepicker.min.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/common/bootstrap-select.min.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/common/style.css}" />
+<link rel="stylesheet" th:href="@{/fontawesome/all.min.css}" />
+
+<!--画面独自CSS-->
+<style type="text/css">
+.pc-code {
+	width: 10%;
+}
+
+.pc-cpu {
+	width: 15%;
+}
+
+.pc-name {
+	width: 15%;
+}
+
+.pc-memo {
+	width: 20%;
+}
+
+.btn-code {
+	width: 70px;
+}
+
+table.table {
+	height: 250px;
+}
+
+.font-position {
+	text-align: center;
+}
+
+.sen-group-mid {
+	display: inline-flex;
+	justify-content: center;
+	align-items: stretch;
+	border-radius: 0.3rem;
+	text-align: center;
+	height: 100%;
+	margin: 0 6px 0 0;
+	border: 1px solid rgba(100, 100, 50, 1);
+	margin-left: 60px;
+}
+
+.sen-group-size {
+	display: inline-flex;
+	justify-content: center;
+	align-items: stretch;
+	border-radius: 0.3rem;
+	text-align: center;
+	height: 100%;
+	margin: 0 6px 0 0;
+	border: 1px solid rgba(100, 100, 50, 1);
+	margin-left: 50px;
+}
+
+</style>
+
+<script>
+$(function() {
+	$(document).on("click",".submitbtn",
+			function() {
+			if ($(this).val() == '検索') {
+					var from = $('#form [name=pcIntro1]').val();
+			    var to   = $('#form [name=pcIntro2]').val();
+			    var date1 = new Date(from);
+			    var date2 =　new Date(to);
+			  if(date1>date2){
+			    		$("#mes").html(MESSAGE.ERR006).css('color','red').css('border-bottom' ,'solid 1px red');
+						 $('html, body').animate({scrollTop:0});
+			  }else{
+					  event.preventDefault();
+					  var $form = $("form");
+					$.ajax({
+						type : 'GET',
+						dataType : 'html',
+						url : getContextUrl('/master/pc/get'),
+						data : $form.serialize(),
+					}).done(function(data) {
+						var error =data.indexOf("name=\"msg\" value=\"\"");
+				if(error!=-1){
+						$('table').html($('table', $(data)).html());
+						$("h1").html($("h1", $(data)).html());
+				}else{
+							 $("#mes").html(MESSAGE.ERR001).css('color','red').css('border-bottom' ,'solid 1px red');
+							 $('html, body').animate({scrollTop:0});
+						}
+					  })
+			    }
+				}	
+			
+			if ($(this).val() == '詳細') {
+					var detail = $(this).attr("id");
+					event.preventDefault();
+					$.ajax({
+						type : 'GET',
+						dataType : 'json',
+						url : getContextUrl('/master/pc/check'),
+						data : 'pcCd=' + detail,
+					}).done(function(data) {
+						var error = data["msg"];
+				if (error==null){
+				  event.preventDefault();
+					$.ajax({
+						type : 'GET',
+						dataType : 'html',
+						url : getContextUrl('/master/pc/detail'),
+						data : 'pcCd=' + detail,
+					}).done(function(data) {
+						window.location.href = getContextUrl('/master/pc/detail?pcCd='+detail);
+					})
+				 }else{	
+						$("#mes").html(error).css('color','red').css('border-bottom' ,'solid 1px red');
+						$('html, body').animate({scrollTop:0});
+					}
+				})
+			}
+					  
+			if ($(this).val() == '削除') {
+					var id = $(this).attr("id");
+					var nm = $(this).attr("name");
+					var conf = confirm('PCコード　:　' + id + '\n' + 'マシン名　 :　'	+ nm + '\n' + '\n' + 'を削除しますか？');
+				if (conf == true) {
+						event.preventDefault();
+						$.ajax({
+							type : 'GET',
+							dataType : 'html',
+							url : getContextUrl('/master/pc/delete'),
+							data : 'pcCd=' + id,
+						}).done(function(data) {
+							$("#mes").html(MESSAGE.INF006).css('color','#3CB371').css('border-bottom' ,'solid 1px #66CC33');
+							$('html, body').animate({scrollTop:0});
+					　　　	event.preventDefault();
+						  var $form = $("form");
+						 $.ajax({
+							type : 'GET',
+							dataType : 'html',
+							url :getContextUrl('/master/pc/search'),
+							data : $form.serialize(),
+						}).done(function(data) {
+							$('table').html($('table',$(data)).html());
+						}).fail(function(data) {
+							
+						})
+						})
+				}else{
+						//ここに必要であれば削除中止の際のメッセージ
+					}
+				}
+			})
+
+});
+</script>
+
+
+</head>
+<body>
+	<!--ヘッダ-->
+	<header class="sen-header">
+		<div id="header-area" th:replace="common/header"></div>
+	</header>
+
+	<!--メニュー-->
+	<aside class="sen-menu" role="complementary" id="side">
+		<div id="menu-area" th:replace="common/menu"></div>
+	</aside>
+
+	<!--コンテンツ-->
+	<main class="sen-contents clearfix" role="main" id="main">
+	<div class="sen-main-contents">
+		<br></br>
+		<p class="title">PCマスタ検索</p>
+		<form th:id="form" th:object="${form}" method="GET" autocomplete="off">
+			<input type="hidden" th:field="*{msg}" id="" name="" />
+			<h1>
+				<span class="message" id="mes"></span>
+			</h1>
+			<div class="searchingbox">
+				<div class="search-name">
+					<p>検索条件</p>
+				</div>
+				<div class="sen-line">
+					<div class="sen-group-left">
+						<label class="sen-title">マシン名</label> <input type="text"
+							th:field="*{pcName}" class="form-control sen-text sen-sm"
+							maxlength="11" />
+					</div>
+					<div class="sen-group-mid">
+						<label class="sen-title">CPU</label> <input type="text"
+							th:field="*{pcCpu}" class="form-control sen-text sen-sm"
+							maxlength="30" />
+					</div>
+					<div class="sen-group-size">
+						<label class="sen-title">OS</label> <input type="text"
+							th:field="*{pcOs}" class="form-control sen-text sen-sm"
+							maxlength="30" />
+					</div>
+				</div>
+				<div class="sen-line">
+					<div class="sen-group-left">
+						<label class="sen-title">メモリ</label> <input type="text"
+							th:field="*{pcMemory}" class="form-control sen-text sen-sm"
+							maxlength="30" />
+					</div>
+					<div class="sen-group-mid">
+						<label class="sen-title">導入年月日</label> <input type="text"
+							th:field="*{pcIntro1}" id="datepicker"
+							class="form-control sen-date sen-sm " maxlength="10" />
+					</div>
+					<p class="tilde">~</p>
+					<div class="sen-group">
+						<input type="text" th:field="*{pcIntro2}" id="datepicker2"
+							class=" form-control sen-date sen-sm" maxlength="10" />
+					</div>
+				</div>
+			</div>
+			<div class="sen-line">
+				<div class="sen-btn-right">
+					<input id="search" type="button" name=""
+						class="btn btn-primary btn-lg sen-btn-search submitbtn" value="検索" />
+				</div>
+			</div>
+			<table
+				class="table table-striped table-hover table-bordered table-responsive pre-scrollable">
+				<thead>
+					<tr class="th-color">
+						<th class="pc-code">PCコード</th>
+						<th class="pc-name">マシン名</th>
+						<th class="pc-name">OS</th>
+						<th class="pc-cpu">CPU</th>
+						<th class="pc-memo">メモリ</th>
+						<th class="pc-name">導入年月日</th>
+						<th class="btn-code"></th>
+						<th class="btn-code"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="member:${form.pcInfo}">
+
+						<td class="font-position" th:text="${member.pcCd}"></td>
+						<td th:text="${member.pcName}"></td>
+						<td th:text="${member.pcOs}"></td>
+						<td th:text="${member.pcCpu}"></td>
+						<td th:text="${member.pcMemory}"></td>
+						<td th:text="${member.pcIntro}"></td>
+						<td><input type="button" th:id="${member.pcCd}"
+							class="btn btn-info btn-md submitbtn" value="詳細" /></td>
+						<td><input type="button"
+							class="btn btn-danger btn-md submitbtn" value="削除"
+							th:id="${member.pcCd}" th:name="${member.pcName}" /></td>
+					</tr>
+				</tbody>
+			</table>
+
+		</form>
+	</div>
+	</main>
+
+	<!--フッター-->
+	<footer class="sen-footer">
+		<div id="footer-area" th:replace="common/footer"></div>
+	</footer>
+</body>
+
+</html>

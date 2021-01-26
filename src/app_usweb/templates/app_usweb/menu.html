@@ -1,0 +1,97 @@
+<head>
+<link rel="stylesheet" type="text/css" href="../../static/app/css/menu.css">
+</head>
+<body>
+{% extends "app_usweb/base.html" %}
+{% block content %}
+<div class="card col-md-6 mx-auto">
+	<div class="accbox">
+		<!--ラベル1-->
+		<input type="checkbox" id="label1" class="cssacc" /> <label
+			for="label1"> <span class="font-size-master">社員情報<span
+				class="e-search-margin"></span><i class="fa fa-users"></i></span>
+		</label>
+		<div class="accshow">
+			<!--ここに隠す中身-->
+
+			<div class="font-size-submenu">
+				<span class="submenu-margin"> <i class="fas fa-save"></i> <span
+					class="icon-margin"> <a th:href="@{/trans/employeeInfo/search}">社員情報検索</a></span>
+				</span>
+			</div>
+
+		</div>
+		<!--//ラベル1-->
+		<!--ラベル2-->
+		<input type="checkbox" id="label2" class="cssacc" /> <label
+			for="label2"> <span class="font-size-master">社員マスタ<span
+				class="e-master-margin"></span><i class="fas fa-user-alt"></i></span>
+		</label>
+		<div class="accshow">
+			<!--ここに隠す中身-->
+
+			<div class="font-size-submenu">
+				<span class="submenu-margin"> <i class="fas fa-save"></i> <span
+					class="icon-margin"> <a href="{% url 'app_usweb:user_create' %}">社員マスタ登録</a></span>
+				</span>
+			</div>
+
+			<div class="font-size-submenu">
+				<span class="submenu-margin"> <i class="fas fa-search"></i>
+				<a href="{% url 'app_usweb:reference' %}">社員マスタ検索</a>
+				</span>
+			</div>
+
+		</div>
+		<!--//ラベル2-->
+
+		<!--ラベル3-->
+		<input type="checkbox" id="label3" class="cssacc" /> <label
+			for="label3"> <span class="font-size-master">モニタマスタ<span
+				class="m-master-margin"></span><i class="fas fa-desktop"></i></span>
+		</label>
+		<div class="accshow">
+			<!--ここに隠す中身-->
+
+			<div class="font-size-submenu">
+				<span class="submenu-margin"> <i class="fas fa-save"></i><span
+					class="icon-margin"> <a th:href="@{/master/monitor/regist}">モニタマスタ登録</a>
+				</span></span>
+			</div>
+
+			<div class="font-size-submenu">
+				<span class="submenu-margin"> <i class="fas fa-search"></i> <a
+					th:href="@{/master/monitor/search}">モニタマスタ検索</a>
+				</span>
+			</div>
+
+		</div>
+		<!--//ラベル3-->
+
+		<!--ラベル4-->
+		<input type="checkbox" id="label4" class="cssacc" /> <label
+			for="label4"> <span class="font-size-master">PCマスタ<span
+				class="pc-master-margin"></span><i class="fas fa-laptop"></i></span>
+		</label>
+		<div class="accshow">
+			<!--ここに隠す中身-->
+
+			<div class="font-size-submenu">
+				<span class="submenu-margin"> <i class="fas fa-save"></i> <span
+					class="icon-margin"><a th:href="@{/master/pc/regist}">
+							PCマスタ登録</a> </span>
+				</span>
+			</div>
+
+			<div class="font-size-submenu">
+				<span class="submenu-margin"> <i class="fas fa-search"></i> <a
+					th:href="@{/master/pc/search}"> PCマスタ検索</a>
+				</span>
+			</div>
+		</div>
+		<!--//ラベル4-->
+
+	</div>
+</div>
+	<!--//.accbox-->
+{% endblock %}
