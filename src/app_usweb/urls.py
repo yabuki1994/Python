@@ -1,19 +1,23 @@
 from django.urls import path
 from app_usweb import views
+from .views import login
+from .views import menu
+from .views.employee import usercreate
+from .views.employee import userserch
 
 app_name = 'app_usweb'
 
 urlpatterns = [
     # ログイン画面
-    path('login/', views.Login.as_view(), name='login'),
+    path('login/', login.Login.as_view(), name='login'),
     # ログアウト画面
-    path('logout/', views.Logout.as_view(), name='logout'),
+    path('logout/', login.Logout.as_view(), name='logout'),
     # menu画面
-    path('menu/', views.Menu.as_view(), name='menu'),
+    path('menu/', menu.Menu.as_view(), name='menu'),
     # ユーザ登録
-    path('user_create/', views.UserCreate.as_view(), name='user_create'),
+    path('user_create/', usercreate.UserCreate.as_view(), name='user_create'),
     # ユーザ登録完了
-    path('user_create/complete/', views.UserCreateComplete.as_view(), name='user_create_complete'),
+    path('user_create/complete/', usercreate.UserCreateComplete.as_view(), name='user_create_complete'),
     # ユーザ検索
-    path('reference', views.Reference.as_view(), name='reference'),
+    path('reference', userserch.Reference.as_view(), name='reference'),
 ]
