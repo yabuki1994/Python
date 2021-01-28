@@ -12,8 +12,11 @@ from django.views import generic
 from ...forms import (LoginForm, UserCreateForm)
 from ...forms import SearchForm
 from django.db.models import Q
+import logging
 ###############################
 
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 User = get_user_model()
 
 class Reference(LoginRequiredMixin, generic.ListView):
@@ -24,6 +27,10 @@ class Reference(LoginRequiredMixin, generic.ListView):
         form_value = [
             self.request.POST.get('employee_cd', None),
         ]
+
+        # output log
+        logger.info("employee_cd : {0}".format(form_value[0]))
+
         request.session['form_value'] = form_value
         # 検索時にページネーションに関連したエラーを防ぐ
         self.request.GET = self.request.GET.copy()
