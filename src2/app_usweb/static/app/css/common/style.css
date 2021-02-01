@@ -1,0 +1,333 @@
+
+/* # ---------
+#	base
+#  ---------*/
+
+html {
+	font-size:10pt;
+}
+body {
+	color: #333;
+	background-color:#FFFFF0;
+	font-family: 'Noto Sans JP', sans-serif;
+	font-weight: 250;
+	letter-spacing: 0.1em;
+}
+
+button:hover {
+	opacity: 0.4;
+}
+
+/* # ---------
+#	header
+#  ---------*/
+
+.sen-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 60px;
+	width: 100%;
+	background: radial-gradient(#F8F8F8,#1253A4);
+	border-bottom: solid 1px #9ca3ae;
+	z-index: 20;
+}
+
+/* # ---------
+#	menu
+#  ---------*/
+
+.sen-menu {
+	position: fixed;
+	top: 60px;
+	left: 0;
+	height:calc(100% - 60px) ;
+	background: #F8F8F8;
+	display: block;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	border-right: solid 1px #9ca3ae;
+	padding: 0 0 76px;
+	width: 190px;
+	z-index: 10;
+	
+
+}
+
+/* # ---------
+#	contents
+#  ---------*/
+.sen-contents {
+	background: radial-gradient(#CCDFCC, #F8F8F8);
+
+	margin-left: 142px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 5px 5px 20px;
+	-webkit-transition: margin 0.3s ease;
+	-o-transition: margin 0.3s ease;
+	transition: margin 0.3s ease;
+	
+}
+
+.sen-main-contents {
+	max-width: 1260px;
+	background: white;
+	padding: 60px 30px 20px 80px;
+	margin-bottom: 20px;
+	border-radius: 10px;
+	
+}
+
+/* # ---------
+#	footer
+#  ---------*/
+
+.sen-footer {
+	position: fixed;
+	bottom: 0;
+	height: 50px;
+	width: 100%;
+	background: #F8F8F8;
+	z-index: 5;
+	text-align: center;
+}
+
+/* # ---------
+#	input
+#  ---------*/
+
+	/*入力サイズ*/
+	.sen-xs {width:60px !important ;}
+	.sen-ss {width:100px !important;}
+	.sen-sm {width:180px !important;}
+	.sen-md {width:250px !important;}
+
+	/*テキスト項目に使用*/
+	.sen-text  {
+		text-align:left;
+	}
+
+	/*コード項目に使用*/
+	.sen-cd  {
+		text-align:center;
+	}
+	
+	/*数値項目に使用*/
+	.sen-numeric  {
+		text-align:right;
+		width:130px !important;;
+		ime-mode: disabled;
+	}
+
+	/*日付項目に使用*/
+	.sen-date  {
+		text-align:center;
+		width:110px !important;;
+		ime-mode: disabled;
+	}
+
+	/*ラベルのタイトルに使用*/
+	.sen-title{
+		display:flex;
+		justify-content: center;
+		align-items: center;
+		min-width:100px;
+		text-align:center;
+		font-weight: 600;
+		margin:0px;
+		color: rgb(232, 241, 234);
+		background-color:#1253A4;
+		border-top-left-radius: 0.3rem;
+		border-bottom-left-radius: 0.3rem;
+		border-right: 1px solid rgba(150, 150, 150, 1);
+	}
+
+	/*必須マーク*/
+	.sen-required::before {
+		font-weight: bold;
+		color: #CC0000;
+		content:"＊";
+	}
+
+	/*項目を並べたいときに使用*/
+	.sen-line {
+		display:flex;
+		justify-content:flex-start;
+		white-space: nowrap;
+		margin:4px 0px 20px 0px;
+	}
+
+	/*項目をグループ化したいときに使用*/
+	.sen-group {
+		display:inline-flex;
+		justify-content: center;
+		align-items: stretch;
+		border-radius: 0.3rem;
+		text-align:center;
+		height:100%;
+		margin:0 6px 0 0;
+		border: 1px solid rgba(100, 100, 50, 1);
+	}
+
+
+	/*必須項目が無い場合の登録項目の位置*/
+	.sen-group-left-nonexist {
+		display:inline-flex;
+		justify-content: center;
+		align-items: stretch;
+		border-radius: 0.3rem;
+		text-align:center;
+		height:100%;
+		margin:0 6px 0 0;
+		border: 1px solid rgba(100, 100, 50, 1);
+		margin-left:60px;
+
+	}
+
+	/*必須項目がある場合の登録項目の位置*/
+	.sen-group-left-exist {
+		display:inline-flex;
+		justify-content: center;
+		align-items: stretch;
+		border-radius: 0.3rem;
+		text-align:center;
+		height:100%;
+		margin:0 6px 0 0;
+		border: 1px solid rgba(100, 100, 50, 1);
+		margin-left:10px;
+
+	}
+	/*機能名タイトル*/
+	.title {
+		border: 1px solid #ccc;
+		border-bottom: 8px solid #537791;
+		font-family: 'Noto Sans JP', sans-serif !important;
+		margin:  5px 0  40px 25px;	
+		padding: 5px 10px 3px 10px;
+		font-size: 1.2rem !important;
+		width: 90%;
+		text-align:center;	
+	}	
+
+	/*ボタン左寄せしたいときに使用*/
+	.sen-btn-left{
+		width:100%;
+		margin-left:20px;
+		margin-bottom: 20px;
+	}
+
+	/*ボタン右寄せしたいときに使用*/
+	.sen-btn-right{
+		width:100%;
+		margin-left:920px;
+		margin-bottom: 20px;
+	}
+	/*検索画面一覧（文字のフォント変更)*/
+	.search-name{
+		font-size:13pt;
+		font-family:'Script';
+		font-weight: bold;
+	
+	} 	
+	/*テーブルのヘッダー色*/
+	.th-color{
+		background-color: lightskyblue;
+	}
+	/*検索条件の枠線*/
+	.searchingbox{
+    padding: 8px 19px;
+    margin: 2em 0;
+    color: #2c2c2f;
+    background: #cde4ff;
+    border-top: solid 5px #5989cf;
+	border-bottom: solid 5px #5989cf; 
+	}
+	/*テーブルのスクロール設定*/
+	table.table-search{
+	 overflow-y:scroll;
+	 height:250px;
+	 display:block;
+	}
+	/*検索条件入力フォームの間隔,左*/
+	.sen-group-left {
+		display:inline-flex;
+		justify-content: center;
+		align-items: stretch;
+		border-radius: 0.3rem;
+		text-align:center;
+		height:100%;
+		margin:0 6px 0 0;
+		border: 1px solid rgba(100, 100, 50, 1);
+		margin-left:50px;
+
+	}
+
+	
+
+	/*検索条件入力フォームの間隔,右*/
+	.sen-group-right-upper {
+		display:inline-flex;
+		justify-content: center;
+		align-items: stretch;
+		border-radius: 0.3rem;
+		text-align:center;
+		height:100%;
+		margin:0 6px 0 0;
+		border: 1px solid rgba(100, 100, 50, 1);
+		margin-left:300px;
+
+	}
+	/*検索条件入力フォームの間隔,保有資格用*/
+	.sen-group-right-downer {
+		display:inline-flex;
+		justify-content: center;
+		align-items: stretch;
+		border-radius: 0.3rem;
+		text-align:center;
+		height:100%;
+		margin:0 6px 0 0;
+		border: 1px solid rgba(100, 100, 50, 1);
+		margin-left:270px;
+
+	}
+	/*検索ボタンの位置設定*/
+	.sen-btn-search{
+	position:relative;right : 0%;
+
+	}
+	
+	/*メッセージデザイン*/
+span.message {
+    font-size: 20px;
+    font-weight: bold;    
+    margin: 0;
+    width: 95%;
+    text-align: center; 
+    display: block;
+}
+
+/*各マスタ登録各項目位置指定*/
+.sen-title-position {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-width: 150px;
+	text-align: center;
+	font-weight: 600;
+	margin: 0px;
+	color: rgb(232, 241, 234);
+	background-color: #1253A4;
+	border-top-left-radius: 0.3rem;
+	border-bottom-left-radius: 0.3rem;
+	border-right: 1px solid rgba(150, 150, 150, 1);
+}
+
+/*登録マスタ戻るボタンレイアウト*/
+.btn-position-back {
+	position: relative;
+	left: -77%;
+	background-color: #808080;
+	border-style: solid;
+	box-shadow: 1px 1px 2px;
+}

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>社員情報登録</title>
+
+
+  <!--JS-->
+  <script type="text/javascript" th:src="@{/js/common/jquery-3.3.1.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/common/jquery-ui.js}"></script>
+  <script type="text/javascript" th:src="@{/js/common/bootstrap.bundle.js}"></script>
+  <script type="text/javascript" th:src="@{/js/common/bootstrap-datepicker.js}"></script>
+  <script type="text/javascript" th:src="@{/js/common/bootstrap-datepicker.ja.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/common/bootstrap-select.js}"></script>
+  <script type="text/javascript" th:src="@{/js/common/common.js}"></script>
+
+  <link rel="stylesheet" type="text/css" th:href="@{/css/common/bootstrap.css}" />
+  <link rel="stylesheet" type="text/css" th:href="@{/css/common/bootstrap3icons.css}" />
+  <link rel="stylesheet" type="text/css" th:href="@{/css/common/bootstrap-theme.min.css}" />
+  <link rel="stylesheet" type="text/css" th:href="@{/css/common/bootstrap-datepicker.min.css}" />
+  <link rel="stylesheet" type="text/css" th:href="@{/css/common/bootstrap-select.min.css}" />
+  <link rel="stylesheet" type="text/css" th:href="@{/css/common/style.css}" />
+
+  <!--画面独自CSS-->
+  <style type="text/css">
+    /*追加入力サイズ*/
+    sen-mx {
+      width: 270px !important;
+    }
+
+    /*追加入力サイズnumeric*/
+    .sen-numeric-emp {
+      text-align: center;
+      width: 180px !important;
+      ime-mode: disabled;
+    }
+
+    .sen-required-position::before {
+      font-weight: bold;
+      color: #CC0000;
+      content: "＊";
+      margin-left: 30px
+    }
+
+    /*エラーメッセージのレイアウト*/
+    .message {
+      color: red;
+    }
+
+
+    /*「登録」ボタンのレイアウト及び位置指定*/
+    .btn-position {
+      position: relative;
+      left: 0.5%;
+      background-color: darkorange;
+      border-style: solid;
+      box-shadow: 1px 1px 2px;
+      cursor: pointer;
+    }
+
+    /*改行のレイアウト*/
+    .css_white-space_pre-wrap {
+      white-space: pre-wrap;
+    }
+  </style>
+
+  <!--画面独自JS-->
+  <script>
+  $(document).on('click','.contract_date',function(){
+      $(this).datepicker({
+        format: "yyyy/mm/dd",
+        orientation: 'bottom',
+        language: 'ja',
+      });
+      $(this).datepicker("show");
+  });
+
+    //PJ名からPJコードを表示する
+    function codedisplay() {
+      //id=pj_cdの値をid=pj_nameの値（value=PJコード）で書き換える
+      var pj_cd = document.getElementById("pj_name").value;
+      // .value で取得した「pj_cd」を自動的に設定する
+      document.getElementById("pj_cd").value = pj_cd;
+    }
+
+    //登録ボタン押下時の処理。入力チェックに問題がなければControllerクラスで存在チェックを行う。
+    $(document).on('click', '.btn', function () {
+      if ($(this).val() == '登録') {
+        $(function () {
+          //入力チェックメソッドを呼び出す。
+          var flag = inputCheck(flag);
+
+          //入力項目に問題がない場合、controllerクラスで存在チェックを行う
+          if (flag == 0) {
+            $(function () {
+              var $form = $('form');
+              $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: getContextUrl('/trans/employeeInfo/regist/check'),
+                data: $form.serialize(),
+
+              }).done(function (data) {
+                //errorに存在チェックで発生したエラーメッセージを代入
+                var errorMessage = data['msg'];
+
+                if(errorMessage == null){
+                  //更新メソッドを呼び出す
+                  var regist = confirm(MESSAGE.INF001);
+                  update(errorMessage, regist);
+                }else{
+                  $('#mes').html(errorMessage).css('color', 'red').css(
+                  'border-bottom', 'solid 1px red');
+                  var scr = scrollTop(scr);
+                }
+              })
+            })
+          }
+
+        })
+      }
+    })
+
+    //入力値を元に、DBの項目を更新する。
+    function update(errorMessage, regist) {
+      if(regist == true){
+        $(function () {
+          var $form = $('form');
+          $.ajax({
+            type: 'GET',
+            dataType: 'html',
+            url: getContextUrl('/trans/employeeInfo/update'),
+            data: $form.serialize(),
+
+          }).done(function (data) {
+            $('#mes').html(MESSAGE.INF004).css('color', '#3CB371')
+              .css('border-bottom', 'solid 1px #66CC33');
+
+            //以下2行はcommon.jsのメソッドを使用
+            var scr = scrollTop(scr);
+            var date = datepicker(date);
+
+            //通信エラーが発生した場合、エラーメッセージを表示する。
+          }).fail(function (XMLHttpRequest, data) {
+            $('#mes').html(MESSAGE.ERR010).css('color', 'red')
+              .css('border-bottom', 'solid 1px red');
+            var scr = scrollTop(scr);
+          })
+        })
+      }
+    }
+
+    //PJ・契約期間の入力チェック
+    function inputCheck(flag) {
+      flag = 0;
+
+      //開始日
+      var startDateValue = document.check.contractSDate.value;
+      var startDate = Date.parse(startDateValue);
+
+      //終了予定日
+      var endDateValue = document.check.contractEDate.value;
+      var endDate = Date.parse(endDateValue);
+
+      //入力できる最大の日付
+      var limitDate = Date.parse(2050/01/01);
+
+      //PJ名
+      var value = $('#pj_name').val();
+
+      //入力された日付がyyyy/MM/dd形式でない場合
+      if (!startDateValue.match(/^\d{4}\/\d{2}\/\d{2}$/)
+        || !endDateValue.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
+        flag = 1;
+      }
+
+      //開始日が終了日より大きい場合
+      if (startDate > endDate) {
+        flag = 1;
+      }
+
+      // UT障害 No.35 START
+      //開始日または終了日が2050/01/01以降の場合
+      if(startDate >= limitDate || endDate >= limitDate){
+    	  flag = 1;
+      }
+      // UT障害 No.35 END
+
+
+      //PJ名が空欄の場合
+      if (!value) {
+        flag = 2;
+      }
+
+      if (flag == 1) {
+        $('#mes').html(MESSAGE.ERR008)
+          .css('color', 'red').css('border-bottom', 'solid 1px red');
+        var scr = scrollTop(scr);
+        return flag;
+
+        //PJ名が空欄の場合
+      } else if (flag == 2) {
+        $('#mes').html(MESSAGE.ERR009).css('color', 'red').css('border-bottom', 'solid 1px red');
+        var scr = scrollTop(scr);
+        return flag;
+      }
+
+      return flag;
+    }
+  </script>
+</head>
+
+<body>
+  <object data="menu.html" type="text/html" id="sen-menu" style="display: none"></object>
+  <object data="header.html" type="text/html" id="sen-header" style="display: none"></object>
+  <object data="fooder.html" type="text/html" id="sen-footer" style="display: none"></object>
+
+  <!--ヘッダ-->
+  <header class="sen-header">
+    <div id="header-area" th:replace="common/header"></div>
+  </header>
+
+  <!--メニュー-->
+  <aside class="sen-menu" role="complementary" id="side">
+    <div id="menu-area" th:replace="common/menu"></div>
+  </aside>
+
+  <!--コンテンツ-->
+  <main class="sen-contents clearfix" role="main" id="main">
+    <div class="sen-main-contents">
+      <p class="title">社員情報登録</p>
+
+      <form th:id="form" th:object="${form}" method="GET" name="check">
+
+        <!--エラーメッセージ表示箇所-->
+        <span id="mes" class="message" th:text="*{msg}"></span>
+
+        <!-- 隠しデータ（レコード番号は更新、部署・役職・資格コードは存在チェックに使用） -->
+        <!--レコード番号-->
+        <input type="hidden" id="record_no" class="record_no" th:field="*{recordNo}" />
+        <!--部署コード-->
+        <input type="hidden" id="department_cd" class="department_cd" th:field="*{departmentCd}" />
+        <!--役職コード-->
+        <input type="hidden" id="position_cd" class="position_cd" th:field="*{positionCd}" />
+
+        <p>&emsp;&emsp;登録項目を入力してください。<b class="sen-required-position">は必須項目</b></p>
+
+        <div class="sen-line"></div>
+
+        <div class="sen-required-position">
+          <div class="sen-group-left-exist">
+            <label class="sen-title-position">社員名</label>
+
+            <!--名前部分-->
+            <input type="text" id="employee_name" name="employee_name" th:field="*{employeeName}"
+              class="form-control sen-text sen-md" maxlength="15" readonly="readonly" />
+          </div>
+
+          <!--社員番号-->
+          <div class="sen-group">
+            <input type="text" id="employee_cd" name="employee_cd" th:field="*{employeeCd}"
+              class="form-control sen-cd sen-sm" maxlength="6" readonly="readonly" />
+          </div>
+        </div>
+
+        <div class="sen-line"></div>
+
+        <div class="sen-required-position">
+          <div class="sen-group-left-exist">
+            <label class="sen-title-position">部署名</label>
+            <input type="text" id="depart_name" name="depart_name" th:field="*{departName}"
+              class="form-control sen-text sen-md" maxlength="10" readonly="readonly" />
+          </div>
+        </div>
+
+        <div class="sen-line"></div>
+
+        <div class="sen-required-position">
+          <div class="sen-group-left-exist">
+            <label class="sen-title-position">役職名</label>
+            <input type="text" id="position_name" name="position_name" th:field="*{positionName}"
+              class="form-control sen-text sen-md" maxlength="10" readonly="readonly" />
+          </div>
+        </div>
+
+        <div class="sen-line"></div>
+
+        <div class="sen-required-position">
+          <div class="sen-group-left-exist">
+            <label class="sen-title-position">PJ名</label>
+            <select id="pj_name" name="pj_name" class="form-control sen-text sen-md" onchange="codedisplay()">
+
+              <!--「item.key」はPJコード、「item.value」はPJ名-->
+              <option th:each="item:*{pjMap}" th:value="${item.key}" th:text="${item.value}"
+                th:selected="${item.value} == *{pjName}">singleSelect</option>
+            </select>
+          </div>
+
+          <div class="sen-group">
+            <input type="text" id="pj_cd" name="pj_cd" th:field="*{pjCd}" class="form-control sen-cd"
+              readonly="readonly" />
+          </div>
+
+        </div>
+
+        <div class="sen-line"></div>
+
+        <div class="sen-group-left-nonexist">
+          <label class="sen-title-position">契約期間</label>
+          <!--開始年月-->
+          <input type="text" id="datepicker" name="contract_s_date" th:field="*{contractSDate}"
+            th:value="*{contractSDate}" class="form-control sen-cd sen-sm contract_date" />
+        </div>
+
+        <label class="tilde">~</label>
+
+        <div class="sen-group">
+          <!--終了年月-->
+          <input type="text" id="datepicker2" name="contract_e_date" th:field="*{contractEDate}"
+            th:value="*{contractEDate}" class="form-control sen-cd sen-sm contract_date" />
+        </div>
+
+        <div class="sen-line"></div>
+
+        <div class="sen-group-left-nonexist">
+          <label class="sen-title-position sen-cd">保有資格1</label>
+          <input type="text" name="qualification1" id="qualification1" th:field="*{qualification1}"
+            class=" form-control sen-text sen-md" readonly="readonly" />
+        </div>
+
+        <div class="sen-line"></div>
+
+        <div class="sen-group-left-nonexist">
+          <label class="sen-title-position  sen-cd ">保有資格2</label>
+          <input type="text" name="qualification2" id="qualification2" th:field="*{qualification2}"
+            class=" form-control sen-text sen-md" readonly="readonly" />
+        </div>
+
+        <div class="sen-line"></div>
+
+        <div class="sen-group-left-nonexist">
+          <label class="sen-title-position  sen-cd ">保有資格3</label>
+          <input type="text" name="qualification3" id="qualification3" th:field="*{qualification3}"
+            class=" form-control sen-text sen-md" readonly="readonly" />
+        </div>
+
+        <div class="sen-line"></div>
+
+        <div class="sen-group-left-nonexist">
+          <label class="sen-title-position sen-cd">備考</label>
+          <!--UT障害 No.30 START-->
+          <textarea id="remark" name="remark" th:field="*{remark}"
+          class="form-control" cols="37" rows="5" maxlength="750"></textarea>
+          <!--UT障害 No.30 END-->
+        </div>
+
+        <!-- 5回改行する -->
+        <div class="css_white-space_pre-wrap">
+
+
+
+
+
+        </div>
+
+        <div class="sen-btn-right">
+          <a href="/U-SWEB/trans/employeeInfo/search">
+            <input id="btn-back" type="button" class="btn-lg btn-position-back btn" value="戻る"/>
+          </a>
+          <!--UT障害 No.21~23 START-->
+          <input id="btn-regist" type="button" class="btn-lg btn-position btn" value="登録"
+          th:disabled="*{exists == null}"/>
+          <!--UT障害 No.21~23 END-->
+        </div>
+
+        <!-- 2回改行する -->
+        <div class="css_white-space_pre-wrap">
+
+
+        </div>
+      </form>
+
+    </div>
+  </main>
+
+  <!--フッター-->
+  <footer class="sen-footer">
+    <div id="footer-area" th:replace="common/footer"></div>
+  </footer>
+</body>
+
+</html>
