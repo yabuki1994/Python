@@ -12,5 +12,5 @@ from django.views import generic
 from django.db.models import Q
 ###############################
 
-class Menu(LoginRequiredMixin, generic.TemplateView):
-    template_name = 'app_usweb/menu.html'
+class MenuView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'common/index.html'

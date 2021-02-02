@@ -13,6 +13,7 @@
                 <input type="hidden" name="next" value="{{ next }}" />
                 {% csrf_token %}
             </form>
+            <a href="{% url 'app_usweb:user_create' %}">社員マスタ登録</a>
         </div>
     </div>
 {% endblock %}

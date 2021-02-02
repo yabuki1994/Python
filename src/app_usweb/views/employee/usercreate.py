@@ -14,7 +14,7 @@ from ...forms import SearchForm
 from django.db.models import Q
 ###############################
 
-class UserCreate(LoginRequiredMixin, generic.CreateView):
+class UserCreate(generic.CreateView):
     """ユーザー登録"""
     template_name = 'app_usweb/user_create.html'
     form_class = UserCreateForm

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org"
 	xmlns="http://www.w3.org/1999/xhtml">
@@ -8,32 +9,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>社員マスタ登録</title>
 
+<script type="text/javascript"	src="{% static 'app/js/common/jquery-3.3.1.min.js' %}"></script>
+<script type="text/javascript"	src="{% static 'app/js/common/jquery-ui.js' %}"></script>
+<script type="text/javascript"	src="{% static 'app/js/common/bootstrap.bundle.js' %}"></script>
+<script type="text/javascript"	src="{% static 'app/js/common/bootstrap-datepicker.js' %}"></script>
+<script type="text/javascript"	src="{% static 'app/js/common/bootstrap-datepicker.ja.min.js' %}"></script>
+<script type="text/javascript"	src="{% static 'app/js/common/bootstrap-select.js' %}"></script>
+<script type="text/javascript" src="{% static 'app/js/common/common.js' %}"></script>
+<link rel="stylesheet" type="text/css"href="{% static 'app/css/common/bootstrap.css' %}"/>
+<link rel="stylesheet" type="text/css"	href="{% static 'app/css/common/bootstrap3icons.css' %}" />
+<link rel="stylesheet" type="text/css"	href="{% static 'app/css/common/bootstrap-theme.min.css' %}" />
+<link rel="stylesheet" type="text/css"	href="{% static 'app/css/common/bootstrap-datepicker.min.css' %}" />
+<link rel="stylesheet" type="text/css"	href="{% static 'app/css/common/bootstrap-select.min.css' %}" />
 
-<script type="text/javascript"
-	th:src="@{/js/common/jquery-3.3.1.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/common/jquery-ui.js}"></script>
-<script type="text/javascript"
-	th:src="@{/js/common/bootstrap.bundle.js}"></script>
-<script type="text/javascript"
-	th:src="@{/js/common/bootstrap-datepicker.js}"></script>
-<script type="text/javascript"
-	th:src="@{/js/common/bootstrap-datepicker.ja.min.js}"></script>
-<script type="text/javascript"
-	th:src="@{/js/common/bootstrap-select.js}"></script>
-<script type="text/javascript" th:src="@{/js/common/common.js}"></script>
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/bootstrap.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/bootstrap3icons.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/bootstrap-theme.min.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/bootstrap-datepicker.min.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/bootstrap-select.min.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/style.css}" />
-<link rel="stylesheet" th:href="@{/fontawesome/all.min.css}" />
+<link rel="stylesheet" type="text/css"	href="{% static 'app/fontawesome/all.min.css' %}" />
 
 <style>
 /*保有資格の入力フォーム*/
@@ -73,10 +62,10 @@ sen-mx {
 </style>
 <script>
 	$(function() {
-		$("#hireDateYm").datepicker({
+		$("#i_hire_data_ym").datepicker({
 			language : 'ja',
 			startView : 1,
-			format : 'yyyy/mm',
+			format : 'yyyymm',
 			autoclose : true,
 			immediateUpdates : true,
 			minViewMode : 1,
@@ -85,7 +74,7 @@ sen-mx {
 	});
 </script>
 <script>
-	$(function() {
+	$(function() {return
 		$(document)
 				.on(
 						"click",
@@ -106,9 +95,9 @@ sen-mx {
 										$
 												.ajax(
 														{
-															type : 'GET',
+															type : 'POST',
 															dataType : 'json',
-															url : getContextUrl('/master/employee/regist/check'),
+															url : getContextUrl("{% url 'app_usweb:employee_info_regist' %}"),
 															data : $form
 																	.serialize(),
 														})
@@ -216,11 +205,11 @@ sen-mx {
 			var regex = new RegExp(/^[a-zA-Z]+$/);//空文字判定
 			var str = "";
 			var flag = 0;
-			if (document.check.EmployeeCd.value == regex.test(str)) {
+			if (document.check.employee_cd.value == regex.test(str)) {
 				flag = 1;
-			} else if (document.check.EmployeeName.value == regex.test(str)) {
+			} else if (document.check.employee_name.value == regex.test(str)) {
 				flag = 1;
-			} else if (document.check.hireDateYm.value == regex.test(str)) {
+			} else if (document.check.hire_data_ym.value == regex.test(str)) {
 				flag = 1;
 			}
 			return flag;
@@ -232,12 +221,12 @@ sen-mx {
 <body>
 	<!--ヘッダ-->
 	<header class="sen-header">
-		<div id="header-area" th:replace="common/header"></div>
+		<div id="header-area">{% include 'common/header.html' %}</div>
 	</header>
 
 	<!--メニュー-->
 	<aside class="sen-menu" role="complementary" id="side">
-		<div id="menu-area" th:replace="common/menu"></div>
+		<div id="menu-area">{% include 'common/menu.html' %}</div>
 	</aside>
 
 	<main class="sen-contents clearfix" role="main" id="main">
@@ -247,107 +236,85 @@ sen-mx {
 			<b>社員マスタ登録</b>
 		</p>
 
+{% for key, value in form.errors.items %}
+{{ key}}{{value}}
+{% endfor %}
+
 		<span id="mes" class="message"></span>
 
-		<form th:id="form" th:object="${form}" method="GET" name="check">
+		<form th:id="form" th:object="${form}" method="POST" name="check">
+		{% csrf_token %}
 			<br></br>
-			<p th:if="*{EmployeeCd == null}">
-				&emsp;&emsp;登録項目を入力してください。<b class="sen-required-position">は必須項目</b>
-			</p>
-			<p th:if="*{EmployeeCd != null}">
-				&emsp;&emsp;更新項目を入力してください。<b class="sen-required-position">は必須項目</b>
-			</p>
+			{% if employee_cd == null %}
+			<p>	&emsp;&emsp;登録項目を入力してください。<b class="sen-required-position">は必須項目</b></p>
+			{% else %}
+			<p>&emsp;&emsp;更新項目を入力してください。<b class="sen-required-position">は必須項目</b></p>
+			{% endif %}
 
 			<div class="sen-line"></div>
 			<div class="sen-required-position">
 				<div class="sen-group-left-exist">
-					<label class="sen-title-position">社員番号</label> <input type="text"
-						th:if="*{EmployeeCd == null}" th:field="*{EmployeeCd}"
-						class="form-control sen-numeric-emp sen-sm" maxlength="6"
-						autocomplete="off" /> <input type="text"
-						th:if="*{EmployeeCd != null}" th:field="*{EmployeeCd}"
-						readonly="readonly" class="form-control sen-cd sen-sm code-pk"
-						maxlength="6" />
+					<label class="sen-title-position">社員番号</label>
+					{{ form.employee_cd }}
 				</div>
 			</div>
 
 			<div class="sen-line"></div>
 			<div class="sen-required-position">
 				<div class="sen-group-left-exist">
-					<label class="sen-title-position">氏名</label> <input type="text"
-						id="" name="" th:field="*{EmployeeName}"
-						class="form-control sen-text sen-sm" maxlength="15"
-						autocomplete="off" />
+					<label class="sen-title-position">氏名</label>
+					{{ form.employee_name }}
 				</div>
 			</div>
 
 			<div class="sen-line"></div>
 			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position sen-cd">カナ氏名</label> <input
-					type="text" id="sample" name="employeeNameKana"
-					th:field="*{EmployeeNameKana}" class="form-control sen-text sen-sm"
-					maxlength="30" autocomplete="off" />
+				<label class="sen-title-position sen-cd">カナ氏名</label>
+					{{ form.employee_name_kana }}
 			</div>
 
 			<div class="sen-line"></div>
 			<div class="sen-required-position">
 				<div class="sen-group-left-exist">
-					<label class="sen-title-position sen-cd">入社年月</label> <input
-						type="text" id="" name="" th:field="*{hireDateYm}"
-						class="form-control sen-cd sen-sm" autocomplete="off" />
+					<label class="sen-title-position sen-cd">入社年月</label>
+					{{ form.hire_data_ym }}
 				</div>
 			</div>
 
 			<div class="sen-line"></div>
 			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position">趣味</label> <input type="text"
-					id="sample" name="hobby" th:field="*{hobby}"
-					class="form-control sen-numeric1 sen-sm" maxlength="10"
-					autocomplete="off" />
+				<label class="sen-title-position">趣味</label>
+					{{ form.hobby }}
 			</div>
 
 			<div class="sen-line"></div>
 			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position sen-cd">保有資格1</label> <select
-					id="qualification1" name="qualification1"
-					class="form-control sen-mx">
-					<option th:each="item : *{qualificationMap}" th:value="${item.key}"
-						th:text="${item.value}"
-						th:selected="${item.key} == *{qualification1}">singleSelect</option>
-				</select>
+				<label class="sen-title-position sen-cd">保有資格1</label>
+					{{ form.qualification1 }}
 			</div>
 
 			<div class="sen-line"></div>
 			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position sen-cd ">保有資格2</label> <select
-					id="qualification2" name="qualification2"
-					class="form-control sen-mx">
-					<option th:each="item : *{qualificationMap}" th:value="${item.key}"
-						th:text="${item.value}"
-						th:selected="${item.key} == *{qualification2}">singleSelect</option>
-				</select>
+				<label class="sen-title-position sen-cd ">保有資格2</label>
+					{{ form.qualification2 }}
 			</div>
 
 			<div class="sen-line"></div>
 			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position">保有資格3</label> <select
-					id="qualification3" name="qualification3"
-					class="form-control sen-mx">
-					<option th:each="item : *{qualificationMap}" th:value="${item.key}"
-						th:text="${item.value}"
-						th:selected="${item.key} == *{qualification3}">singleSelect</option>
-				</select>
+				<label class="sen-title-position">保有資格3</label>
+					{{ form.qualification3 }}
 			</div>
 			<br></br> <br></br> <br></br> <br></br> <br></br>
 
 			<div class="sen-btn-right">
-				<a href="/U-SWEB/master/employee/search"> <input id="btn-back"
-					type="button" class="btn-lg btn-position-back btn"
-					th:if="*{EmployeeCd != null}" value="戻る" /></a> <input id="btn-regist"
-					type="button" class="btn-lg btn-position-detail btn"
-					th:if="*{EmployeeCd != null}" value="更新" /> <input id="btn-regist"
-					type="button" class="btn-lg btn-position btn"
-					th:if="*{EmployeeCd == null}" value="登録" />
+				{% if employee_cd != null %}
+				<a href="/U-SWEB/master/employee/search">
+					<input id="btn-back" type="button" class="btn-lg btn-position-back btn" value="戻る" />
+				</a>
+					<input id="btn-update" type="button" class="btn-lg btn-position-detail btn" value="更新" />
+				{% else %}
+					<input id="btn-regist" type="submit" class="btn-lg btn-position btn" value="登録" />
+				{% endif %}
 			</div>
 			<br></br> <br></br>
 		</form>
@@ -357,7 +324,7 @@ sen-mx {
 
 	<!--フッター-->
 	<footer class="sen-footer">
-		<div id="footer-area" th:replace="common/footer"></div>
+		<div id="footer-area">{% include 'common/footer.html' %}</div>
 	</footer>
 
 </body>

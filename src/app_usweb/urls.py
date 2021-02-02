@@ -1,9 +1,10 @@
 from django.urls import path
 from app_usweb import views
 from .views import login
-from .views import menu
+from app_usweb.views import menuView
 from .views.employee import usercreate
 from .views.employee import userserch
+from .views.employee import EmployeeInfoRegistView
 
 app_name = 'app_usweb'
 
@@ -13,7 +14,9 @@ urlpatterns = [
     # ログアウト画面
     path('logout/', login.Logout.as_view(), name='logout'),
     # menu画面
-    path('menu/', menu.Menu.as_view(), name='menu'),
+    path('menu/', menuView.MenuView.as_view(), name='menu'),
+    # 社員マスタ登録
+    path('employee_info_regist/', EmployeeInfoRegistView.EmployeeInfoRegistView.as_view(), name='employee_info_regist'),
     # ユーザ登録
     path('user_create/', usercreate.UserCreate.as_view(), name='user_create'),
     # ユーザ登録完了
