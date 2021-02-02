@@ -1,4 +1,5 @@
 {% load static %}
+{% load item_extras %}
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org"
 	xmlns="http://www.w3.org/1999/xhtml">
@@ -62,7 +63,7 @@ sen-mx {
 </style>
 <script>
 	$(function() {
-		$("#i_hire_data_ym").datepicker({
+		$("#id_hire_data_ym").datepicker({
 			language : 'ja',
 			startView : 1,
 			format : 'yyyymm',
@@ -236,10 +237,16 @@ sen-mx {
 			<b>社員マスタ登録</b>
 		</p>
 
-{% for key, value in form.errors.items %}
-{{ key}}{{value}}
-{% endfor %}
-
+		{% if form.errors.items %}
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			  {% for key, value in form.errors.items %}
+                {% get_employee_label key %}{{value}}
+              {% endfor %}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+        {% endif %}
 		<span id="mes" class="message"></span>
 
 		<form th:id="form" th:object="${form}" method="POST" name="check">
