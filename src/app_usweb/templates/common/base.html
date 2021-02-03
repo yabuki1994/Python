@@ -47,6 +47,7 @@
       type="text/css"
       href="{% static 'app/css/common/style.css' %}"
     />
+
     <!-- 個別CSS -->
     {% block load_css %} {% endblock %}
   </head>
@@ -58,7 +59,7 @@
         <!-- メニュー -->
         <nav
           id="sidebarMenu"
-          class="col-md-1 col-lg-1 d-md-block bg-light sidebar collapse"
+          class="col-md-2 col-lg-2 d-md-block bg-light sidebar collapse"
         >
           <div class="sidebar-sticky pt-3">
             {% include 'common/menu.html' %}
