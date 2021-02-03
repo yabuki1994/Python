@@ -1,25 +1,10 @@
+{% extends 'common/base.html' %}
 
-<!DOCTYPE html>
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Welcome Page</title>
-<script>
-</script>
-<style type="text/css">
-</style>
-</head>
+{% block title %}トップ{% endblock title %}
 
-<body>
-	<header class="sen-header">
-		<div id="header-area">{% include 'common/header.html' %}</div>
-	</header>
+{% block load_css %} {% endblock %}
 
-	<aside class="sen-menu" role="complementary" id="side">
-		<div id="menu-area">{% include 'common/menu.html' %}</div>
-	</aside>
-	<footer class="sen-footer">
-		<div id="footer-area">{% include 'common/footer.html' %}</div>
-	</footer>
-</body>
-</html>
+{% block contents %}
+{% endblock %}
+
+{% block load_js %} {% endblock %}

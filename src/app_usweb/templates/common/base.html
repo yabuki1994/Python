@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="ja" class="h-100">
+  <head>
+    <meta charset="utf-8" />
+    <title>{% block title %} {% endblock %}</title>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'app/css/common/bootstrap.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'app/css/common/bootstrap3icons.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'app/css/common/bootstrap-theme.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'app/css/common/bootstrap-datepicker.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'app/css/common/bootstrap-select.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'app/fontawesome/all.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'app/css/common/base.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'app/css/common/style.css' %}"
+    />
+    <!-- 個別CSS -->
+    {% block load_css %} {% endblock %}
+  </head>
+  <body class="d-flex flex-column h-100">
+    <!-- ヘッダ -->
+    {% include 'common/header.html' %}
+    <div class="container-fluid">
+      <div class="row">
+        <!-- メニュー -->
+        <nav
+          id="sidebarMenu"
+          class="col-md-1 col-lg-1 d-md-block bg-light sidebar collapse"
+        >
+          <div class="sidebar-sticky pt-3">
+            {% include 'common/menu.html' %}
+          </div>
+        </nav>
+        <!-- メインコンテンツ -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 sen-contents clearfix">
+          {% block contents %} {% endblock %}
+        </main>
+      </div>
+    </div>
+    <!-- フッタ -->
+    {% include 'common/footer.html' %}
+
+    <script src="{% static 'app/js/common/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'app/js/common/jquery-ui.js' %}"></script>
+    <script src="{% static 'app/js/common/bootstrap.bundle.js' %}"></script>
+    <script src="{% static 'app/js/common/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'app/js/common/bootstrap-datepicker.ja.min.js' %}"></script>
+    <script src="{% static 'app/js/common/bootstrap-select.js' %}"></script>
+
+    <!-- 個別Javascript -->
+    {% block load_js %} {% endblock %}
+    <script>
+      // メニューの矢印上下変更処理
+      $(".angle-icon").on("click", function () {
+        var $chil = $("i:first-child", this);
+        $chil.toggleClass("fa-angle-down");
+        $chil.toggleClass("fa-angle-up");
+      });
+    </script>
+  </body>
+</html>

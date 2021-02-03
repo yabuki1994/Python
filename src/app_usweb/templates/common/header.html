@@ -1,46 +1,30 @@
 {% load static %}
-<!DOCTYPE html>
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<style>
-.absolute-image {
-	position: absolute;
-	/* 要素の配置方法を指定 */
-	padding: 5px;
-	/* 余白指定 */
-	left: 0%;
-	/* 左からの位置指定 */
-	top: 0px;
-	/* 上からの位置指定 */
-}
-
-.absolute-title {
-	position: absolute;
-	/* 要素の配置方法を指定 */
-	padding: 0px;
-	/* 余白指定 */
-	left: 40%;
-	/* 左からの位置指定 */
-	top: 0%;
-	/* 上からの位置指定 */
-}
-
-.font-size-title {
-	font-size: 330%
-}
-</style>
-
-</head>
-<body>
-	<input id="contextPath" type="hidden" th:value="${#httpServletRequest.getContextPath()}" />
-	<a th:href="@{/}">
-	    <span class="absolute-image">
-	        <img src="{% static 'app/images/unisystem-logo.png' %}"/>
-	    </span>
-	</a>
-	<span class="absolute-title">
-	    <span class="font-size-title">U-SWEB</span>
-	</span>
-</body>
-</html>
+<!-- Fixed navbar -->
+<header>
+  <nav
+    class="navbar navbar-expand-md fixed-top sen-header"
+  >
+    <a class="py-0" href="#"
+      ><img
+        src="{% static 'app/images/unisystem-logo.png' %}"
+        class="img-responsive"
+    /></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarCollapse"
+      aria-controls="navbarCollapse"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse justify-content-center my-0"
+      id="navbarCollapse"
+    >
+      <h1 class="my-0">U-SWEB</h1>
+    </div>
+  </nav>
+</header>
