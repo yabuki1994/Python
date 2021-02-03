@@ -1,7 +1,10 @@
 {% extends 'common/base.html' %}
 {% load item_extras %}
+
+<!--タイトル -->
 {% block title %}社員マスタ登録{% endblock title %}
-<!DOCTYPE html>
+
+<!--個別CSS -->
 {% block load_css %}
 <style>
 /*保有資格の入力フォーム*/
@@ -39,113 +42,114 @@ sen-mx {
 	box-shadow: 1px 1px 2px;
 }
 </style>
- {% endblock %}
+{% endblock %}
 
+<!--メインコンテンツ -->
 {% block contents %}
-	<div class="sen-main-contents" style="min-height:800px">
-		<p class="title">
-			<b>社員マスタ登録</b>
-		</p>
+<div class="sen-main-contents" style="min-height:800px">
+	<p class="title">
+		<b>社員マスタ登録</b>
+	</p>
 
-		{% if form.errors.items %}
-			<div class="alert alert-danger alert-dismissible fade show" role="alert">
-			  {% for key, value in form.errors.items %}
-                {% get_employee_label key %}{{value}}
-              {% endfor %}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-        {% endif %}
+	{% if form.errors.items %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			{% for key, value in form.errors.items %}
+				{% get_employee_label key %}{{value}}
+			{% endfor %}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	{% endif %}
 
-		<span id="mes" class="message"></span>
+	<span id="mes" class="message"></span>
 
-		<form th:id="form" th:object="${form}" method="POST" name="check">
+	<form th:id="form" th:object="${form}" method="POST" name="check">
 		{% csrf_token %}
-			<br></br>
-			{% if employee_cd == null %}
+		<br></br>
+		{% if employee_cd == null %}
 			<p>	&emsp;&emsp;登録項目を入力してください。<b class="sen-required-position">は必須項目</b></p>
-			{% else %}
+		{% else %}
 			<p>&emsp;&emsp;更新項目を入力してください。<b class="sen-required-position">は必須項目</b></p>
-			{% endif %}
+		{% endif %}
 
-			<div class="sen-line"></div>
-			<div class="sen-required-position">
-				<div class="sen-group-left-exist">
-					<label class="sen-title-position">社員番号</label>
-					{{ form.employee_cd }}
-				</div>
+		<div class="sen-line"></div>
+		<div class="sen-required-position">
+			<div class="sen-group-left-exist">
+				<label class="sen-title-position">社員番号</label>
+				{{ form.employee_cd }}
 			</div>
+		</div>
 
-			<div class="sen-line"></div>
-			<div class="sen-required-position">
-				<div class="sen-group-left-exist">
-					<label class="sen-title-position">氏名</label>
-					{{ form.employee_name }}
-				</div>
+		<div class="sen-line"></div>
+		<div class="sen-required-position">
+			<div class="sen-group-left-exist">
+				<label class="sen-title-position">氏名</label>
+				{{ form.employee_name }}
 			</div>
+		</div>
 
-			<div class="sen-line"></div>
-			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position sen-cd">カナ氏名</label>
-					{{ form.employee_name_kana }}
-			</div>
+		<div class="sen-line"></div>
+		<div class="sen-group-left-nonexist">
+			<label class="sen-title-position sen-cd">カナ氏名</label>
+			{{ form.employee_name_kana }}
+		</div>
 
-			<div class="sen-line"></div>
-			<div class="sen-required-position">
-				<div class="sen-group-left-exist">
-					<label class="sen-title-position sen-cd">入社年月</label>
-					{{ form.hire_data_ym }}
-				</div>
+		<div class="sen-line"></div>
+		<div class="sen-required-position">
+			<div class="sen-group-left-exist">
+				<label class="sen-title-position sen-cd">入社年月</label>
+				{{ form.hire_data_ym }}
 			</div>
+		</div>
 
-			<div class="sen-line"></div>
-			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position">趣味</label>
-					{{ form.hobby }}
-			</div>
+		<div class="sen-line"></div>
+		<div class="sen-group-left-nonexist">
+			<label class="sen-title-position">趣味</label>
+			{{ form.hobby }}
+		</div>
 
-			<div class="sen-line"></div>
-			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position sen-cd">保有資格1</label>
-					{{ form.qualification1 }}
-			</div>
+		<div class="sen-line"></div>
+		<div class="sen-group-left-nonexist">
+			<label class="sen-title-position sen-cd">保有資格1</label>
+			{{ form.qualification1 }}
+		</div>
 
-			<div class="sen-line"></div>
-			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position sen-cd ">保有資格2</label>
-					{{ form.qualification2 }}
-			</div>
+		<div class="sen-line"></div>
+		<div class="sen-group-left-nonexist">
+			<label class="sen-title-position sen-cd ">保有資格2</label>
+			{{ form.qualification2 }}
+		</div>
 
-			<div class="sen-line"></div>
-			<div class="sen-group-left-nonexist">
-				<label class="sen-title-position">保有資格3</label>
-					{{ form.qualification3 }}
-			</div>
-<div class="container mt-5">
-				{% if employee_cd != null %}
+		<div class="sen-line"></div>
+		<div class="sen-group-left-nonexist">
+			<label class="sen-title-position">保有資格3</label>
+			{{ form.qualification3 }}
+		</div>
+
+		<div class="container mt-5">
+			{% if employee_cd != null %}
 				<div class="row">
-				<div class="col-8">
-				<a href="/U-SWEB/master/employee/search">
-					<input id="btn-back" type="button" class="btn-lg btn-position-back btn" value="戻る" />
-				</a>
+					<div class="col-8">
+						<a href="/U-SWEB/master/employee/search">
+							<input id="btn-back" type="button" class="btn-lg btn-position-back btn" value="戻る" />
+						</a>
+					</div>
+					<div class="float-right">
+						<input id="btn-update" type="button" class="btn-lg btn-position-detail btn" value="更新" />
+					</div>
 				</div>
-				<div class="float-right">
-					<input id="btn-update" type="button" class="btn-lg btn-position-detail btn" value="更新" />
-				</div>
-				</div>
-				{% else %}
+			{% else %}
 				<div class="float-right">
 					<input id="btn-regist" type="submit" class="btn-lg btn-position btn" value="登録" />
 				</div>
-				{% endif %}
-
+			{% endif %}
+		</div>
+	</form>
 </div>
-		</form>
-
-	</div>
-
 {% endblock %}
+
+<!--個別Javascript -->
 {% block load_js %}
 <script>
 	$(function() {
