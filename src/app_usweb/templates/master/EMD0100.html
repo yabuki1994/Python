@@ -1,141 +1,12 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>社員マスタ検索</title>
+{% extends 'common/base.html' %}
+{% load item_extras %}
 
+<!--タイトル -->
+{% block title %}社員マスタ検索{% endblock title %}
 
-<script type="text/javascript" th:src="@{/js/common/jquery-3.3.1.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/common/jquery-ui.js}"></script>
-<script type="text/javascript" th:src="@{/js/common/bootstrap.bundle.js}"></script>
-<script type="text/javascript" th:src="@{/js/common/bootstrap-datepicker.js}"></script>
-<script type="text/javascript"
-	th:src="@{/js/common/bootstrap-datepicker.ja.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/common/bootstrap-select.js}"></script>
-<script type="text/javascript" th:src="@{/js/common/common.js}"></script>
-
-<link rel="stylesheet" type="text/css" th:href="@{/css/common/bootstrap.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/bootstrap3icons.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/bootstrap-theme.min.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/bootstrap-datepicker.min.css}" />
-<link rel="stylesheet" type="text/css"
-	th:href="@{/css/common/bootstrap-select.min.css}" />
-<link rel="stylesheet" type="text/css" th:href="@{/css/common/style.css}" />
-<link rel="stylesheet" th:href="@{/fontawesome/all.min.css}" />
-<script>
-	$(function() {
-		$("#datepicker3").datepicker({
-			language : 'ja',
-			startView : 1,
-			format : 'yyyy/mm',
-			autoclose : true,
-			immediateUpdates : true,
-			minViewMode : 1,
-			orientation : 'bottom',
-		});
-	});
-</script>
-<script>
-$(function() {
-	$(document).on("click",".submitbtn",
-			function() {
-		 if ($(this).val() == '検索') {
-				  var numberCheck =$('#form [name=employeeCd]').val();
-			 if(numberCheck.match(/^[0-9]+$/) || numberCheck=="" ){
-					event.preventDefault();
-					var $form = $("form");
-					$.ajax({
-						type : 'GET',
-						dataType : 'html',
-						url :getContextUrl('/master/employee/get'),
-						data : $form.serialize(),
-					}).done(function(data) {
-					 var error=data.indexOf("name=\"msg\" value=\"\"");
-				if(error!=-1){
-						 $("table").html($("table", $(data)).html());	
-						 $("h1").html($("h1", $(data)).html());
-				}else{
-						$("#mes").html(MESSAGE.ERR001).css('color','red').css('border-bottom' ,'solid 1px red');
-						$('html, body').animate({scrollTop:0});
-					 } 
-					}).fail(function(data){			
-						})
-			 }else{
-						$("#mes").html(MESSAGE.ERR005).css('color','red').css('border-bottom' ,'solid 1px red');
-						$('html, body').animate({scrollTop:0});
-					}
-				}
-		 
-		 if ($(this).val() == '詳細') {
-					var detail = $(this).attr("id");
-					event.preventDefault();
-					$.ajax({
-						type : 'GET',
-						dataType : 'json',
-						url : getContextUrl('/master/employee/check'),
-						data : 'employeeCd=' + detail,
-					}).done(function(data) {
-						var error = data["msg"];
-			  if(error==null){
-				  event.preventDefault();
-					$.ajax({
-						type : 'GET',
-						dataType : 'html',
-						url : getContextUrl('/master/employee/detail'),
-						data : 'employeeCd=' + detail,
-					}).done(function(data) {
-						window.location.href = getContextUrl('/master/employee/detail?employeeCd='+detail);
-					})
-			  }else{
-					  $("#mes").html(error).css('color','red').css('border-bottom' ,'solid 1px red');
-					  $('html, body').animate({scrollTop:0});
-						}
-					})
-				}
-			
-					  
-		 if ($(this).val() == '削除') {
-					var id = $(this).attr("id");
-					var nm = $(this).attr("name");
-					var conf = confirm('社員番号　:　' + id + '\n' + '社員名　　:　'	+ nm + '\n' + '\n' + 'を削除しますか？');
-				if (conf == true) {
-						event.preventDefault();
-						$.ajax({
-							type : 'GET',
-							dataType : 'html',
-							url : getContextUrl('/master/employee/delete'),
-							data : 'employeeCd=' + id,
-						}).done(function(data) {
-							$("#mes").html(MESSAGE.INF006).css('color','#3CB371').css('border-bottom' ,'solid 1px #66CC33');
-							$('html, body').animate({scrollTop:0});
-					　　　	event.preventDefault();
-						  var $form = $("form");
-						 $.ajax({
-							type : 'GET',
-							dataType : 'html',
-							url :getContextUrl('/master/employee/search'),
-							data : $form.serialize(),
-						}).done(function(data) {
-							$('table').html($('table',$(data)).html());
-						})
-						}).fail(function(data) {
-						//必要なら通信失敗時処理
-						})
-				}else {
-					  //ここに必要であれば削除中止の際のメッセージ
-					}
-				}
-			})
-
-});
-</script>
-
-<style type="text/css">
+<!--個別CSS -->
+{% block load_css %}
+<style>
 /*保有資格の入力フォーム*/
 sen-mx {
 	width: 270px !important;
@@ -177,114 +48,133 @@ sen-mx {
 .moji {
 	font-size: 25px
 }
-
 </style>
+{% endblock %}
 
+<!--メインコンテンツ -->
+{% block contents %}
+<div class="sen-main-contents">
+	<p class="title">社員マスタ検索</p>
 
-</head>
+    <!-- メッセージ表示 -->
+	{% if err_msg %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			{{err_msg}}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	{% endif %}
 
-<body>
-	<!--ヘッダ-->
-	<header class="sen-header">
-		<div id="header-area" th:replace="common/header"></div>
-	</header>
+	<form autocomplete="off" id="form" method="GET">
+		<input type="hidden" class="" th:field="*{msg}" id="" name=""/>
+		<h1><span id="mes" class="message"></span></h1>
 
-	<!--メニュー-->
-	<aside class="sen-menu" role="complementary" id="side">
-		<div id="menu-area" th:replace="common/menu"></div>
-	</aside>
-
-	<!--コンテンツ-->
-	<main class="sen-contents clearfix" role="main" id="main">
-	<div class="sen-main-contents">
-		<p class="title">社員マスタ検索</p>
-		<form autocomplete="off" th:id="form" th:object="${form}" method="GET">
-			<input type="hidden" class="" th:field="*{msg}" id="" name=""/>
-			<h1><span id="mes" class="message"></span></h1>
-		
-			<div class="searchingbox">
-				<div class="search-name">
-					<p>検索条件</p>
+		<div class="searchingbox">
+			<div class="search-name">
+				<p>検索条件</p>
+			</div>
+			<div class="sen-line">
+				<div class="sen-group-left">
+					<label class="sen-title">社員番号</label>
+					<input type="text" class="form-control sen-numericW sen-sm" maxlength="6"
+					 name = "employeeCd" id = "employeeCd" value="{{ request.GET.employeeCd }}"/>
 				</div>
-
-				<div class="sen-line">
-					<div class="sen-group-left">
-
-						<label class="sen-title">社員番号</label> <input type="text"
-							th:field="*{employeeCd}" class="form-control sen-numericW sen-sm"
-							maxlength="6"  name = "employeeCd" id = "employeeCd"/>
-              
-					</div>
-					<div class="sen-group-right-upper">
-						<label class="sen-title">氏名</label> <input type="text"
-							th:field="*{employeeName}" size="20" name="employee_name"
-							class="form-control sen-text sen-sm"  maxlength="15" />
-							
-
-					</div>
-				</div>
-				<div class="sen-line">
-					<div class="sen-group-left">
-						<label class="sen-title ">入社年月</label> <input type="text"
-							id="datepicker3" th:field="*{hireDateYm}"
-							class="form-control sen-cd sen-sm" />
-
-
-					</div>
-					<div class="sen-group-right-upper">
-						<label class="sen-title">保有資格</label>  <select
-					id="qualification1" name="qualification1"
-					class="form-control sen-mx">
-					<option th:each="item : *{qualificationMap}" th:value="${item.key}"
-						th:text="${item.value}"
-						th:selected="${item.key} == *{qualification1}">singleSelect</option>
-				</select>
-					</div>
-					<p class="moji"></p>
+				<div class="sen-group-right-upper">
+					<label class="sen-title">氏名</label>
+					<input type="text" class="form-control sen-text sen-sm" size="20" maxlength="15"
+					name="employeeName"	 value="{{ request.GET.employeeName }}" />
 				</div>
 			</div>
 			<div class="sen-line">
-				<div class="sen-btn-right">
-					<input type="button" class="btn btn-primary btn-lg sen-btn-search submitbtn" id="search"
-						value="検索" />
+				<div class="sen-group-left">
+					<label class="sen-title ">入社年月</label>
+					<input type="text" class="form-control sen-cd sen-sm"
+						name="hireDate" id="hireDate" value="{{ request.GET.hireDate }}" />
 				</div>
+				<div class="sen-group-right-upper">
+					<label class="sen-title">保有資格</label>
+					{{ form.qualification1 }}
+				</div>
+				<p class="moji"></p>
 			</div>
-			<table
-				class="table table-search table-striped table-hover table-bordered">
-				<thead>
-					<tr class="th-color">
-						<th class="no">社員番号</th>
-						<th class="name">氏名</th>
-						<th class="date">入社年月</th>
-						<th class="qf">保有資格</th>
-						<th class="btn-em"></th>
-						<th class="btn-em"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="member:${form.employeeInfo}">
-						<td class="no" th:text="${member.employeeCd}"></td>
-						<td class="name" th:text="${member.employeeName}"></td>
-						<td class="date" th:text="${member.hireDateYm}"></td>
-						<td class="qf" th:text="${member.qualification1}"></td>
-						<td><input type="button" class="btn btn-info btn-md submitbtn" th:id = "${member.employeeCd}" 
-							value="詳細" th:name ="${member.employeeName}"  /></td>
-						<td><input type="button" class="btn btn-danger btn-md submitbtn" 
-							value="削除" th:name = "${member.employeeName}" th:id = "${member.employeeCd}"/></td>
-							
+		</div>
+		<div class="sen-line">
+			<div class="sen-btn-right">
+				<input type="submit" class="btn btn-primary btn-lg sen-btn-search submitbtn" id="search"
+					value="検索" />
+			</div>
+		</div>
+		<table
+			class="table table-search table-striped table-hover table-bordered">
+			<thead>
+				<tr class="th-color">
+					<th class="no">社員番号</th>
+					<th class="name">氏名</th>
+					<th class="date">入社年月</th>
+					<th class="qf">保有資格</th>
+					<th class="btn-em"></th>
+					<th class="btn-em"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for employee in employee_list %}
+				<tr>
+					<td class="no">{{ employee.employee_cd }}</td>
+					<td class="name">{{ employee.employee_name }}</td>
+					<td class="date">{{ employee.hire_date_ym }}</td>
+					<td class="qf">{% autoescape off %}{{ employee.qualification1 }}{% endautoescape %}</td>
+					<td style="vertical-align:middle"><input type="button" value="詳細" class="btn btn-info btn-md submitbtn" id = "${employee.employee_cd}"
+								onclick="location.href='{% url 'app_usweb:employee_info_update' employee.pk %}'"></td>
+					<td style="vertical-align:middle"><input type="button" class="btn btn-danger btn-md submitbtn btn-del" data-toggle="modal"
+								data-target="#deleteModal" data-pk="{{ employee.employee_cd }}"
+								data-url="{% url 'app_usweb:employee_info_delete' employee.pk %}" value="削除"></td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</form>
+</div>
 
-					</tr>
+    {# 削除を確認するモーダル ダイアログ #}
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">確認</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+            <p>社員番号: <span id="del_pk" value="data-pk"></span> の情報を削除しますか？</p>
+          </div>
+          <div class="modal-footer">
+             <a href="#" class="btn btn-primary" id="del_url">OK</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
 
-				</tbody>
-			</table>
-			<!--↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑-->
-		</form>
-	</div>
-	</main>
-	<!--フッター-->
-	<footer class="sen-footer">
-		<div id="footer-area" th:replace="common/footer"></div>
-	</footer>
-</body>
-
-</html>
+ <!--個別Javascript -->
+{% block load_js %}
+<script>
+	$(function() {
+		$("#hireDate").datepicker({
+			language : 'ja',
+			startView : 1,
+			format : 'yyyymm',
+			autoclose : true,
+			immediateUpdates : true,
+			minViewMode : 1,
+			orientation : 'bottom',
+		});
+	});
+	$(function() {
+		  $('.btn-del').on('click', function () {
+		     $("#del_pk").text($(this).data("pk"));
+		     $('#del_url').attr('href', $(this).data("url"));
+		  });
+		});
+</script>
+ {% endblock %}

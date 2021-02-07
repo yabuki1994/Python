@@ -4,7 +4,7 @@ from .views import login
 from app_usweb.views import menuView
 from .views.employee import usercreate
 from .views.employee import userserch
-from .views.employee import EmployeeInfoRegistView
+from .views.employee import EmployeeInfoRegistView,EmployeeInfoReferView,EmployeeInfoUpdateView,EmployeeInfoDeleteView
 
 app_name = 'app_usweb'
 
@@ -17,6 +17,12 @@ urlpatterns = [
     path('menu/', menuView.MenuView.as_view(), name='menu'),
     # 社員マスタ登録
     path('employee_info_regist/', EmployeeInfoRegistView.EmployeeInfoRegistView.as_view(), name='employee_info_regist'),
+    # 社員マスタ検索
+    path('employee_info_refer/', EmployeeInfoReferView.EmployeeInfoReferView.as_view(), name='employee_info_refer'),
+    # 社員マスタ更新
+    path('<int:pk>/employee_info_update/', EmployeeInfoUpdateView.EmployeeInfoUpdateView.as_view(), name='employee_info_update'),
+    # 社員マスタ削除
+    path('<int:pk>/employee_info_delete/', EmployeeInfoDeleteView.EmployeeInfoDeleteView.as_view(), name='employee_info_delete'),
     # ユーザ登録
     path('user_create/', usercreate.UserCreate.as_view(), name='user_create'),
     # ユーザ登録完了

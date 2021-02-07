@@ -2,7 +2,13 @@
 {% load item_extras %}
 
 <!--タイトル -->
-{% block title %}社員マスタ登録{% endblock title %}
+{% block title %}
+	{% if form.employee_cd.value is None %}
+		社員マスタ登録
+	{% else %}
+		社員マスタ更新
+	{% endif %}
+{% endblock title %}
 
 <!--個別CSS -->
 {% block load_css %}
@@ -24,23 +30,21 @@ sen-mx {
 	content: "＊";
 	margin-left: 30px
 }
-/*「登録」ボタンのレイアウト及び位置指定*/
+/*ボタンのレイアウト及び位置指定*/
 .btn-position {
 	position: relative;
 	left: 0.5%;
 	background-color: darkorange;
 	border-style: solid;
 	box-shadow: 1px 1px 2px;
+	margin: 0 5% 0 auto;
 }
 
-/*「更新」ボタンのレイアウト及び位置指定*/
-.btn-position-detail {
-	position: relative;
-	left: 0.5%;
-	background-color: darkorange;
-	border-style: solid;
-	box-shadow: 1px 1px 2px;
+/*戻るボタン位置指定*/
+.btn-position-bk {
+	margin: 0 auto 0 0;
 }
+
 </style>
 {% endblock %}
 
@@ -48,9 +52,24 @@ sen-mx {
 {% block contents %}
 <div class="sen-main-contents" style="min-height:800px">
 	<p class="title">
-		<b>社員マスタ登録</b>
+		{% if form.employee_cd.value is None %}
+			<b>社員マスタ登録</b>
+		{% else %}
+			<b>社員マスタ更新</b>
+		{% endif %}
 	</p>
 
+    <!-- メッセージ表示 -->
+	{% if messages %}
+	<div class="alert alert-success alert-dismissible fade show" role="alert">
+		{% for message in messages %}
+			{{ message }}
+		{% endfor %}
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	{% endif %}
 	{% if form.errors.items %}
 		<div class="alert alert-danger alert-dismissible fade show" role="alert">
 			{% for key, value in form.errors.items %}
@@ -64,10 +83,10 @@ sen-mx {
 
 	<span id="mes" class="message"></span>
 
-	<form th:id="form" th:object="${form}" method="POST" name="check">
+	<form method="POST" name="check">
 		{% csrf_token %}
 		<br></br>
-		{% if employee_cd == null %}
+		{% if form.employee_cd.value is None %}
 			<p>	&emsp;&emsp;登録項目を入力してください。<b class="sen-required-position">は必須項目</b></p>
 		{% else %}
 			<p>&emsp;&emsp;更新項目を入力してください。<b class="sen-required-position">は必須項目</b></p>
@@ -99,7 +118,7 @@ sen-mx {
 		<div class="sen-required-position">
 			<div class="sen-group-left-exist">
 				<label class="sen-title-position sen-cd">入社年月</label>
-				{{ form.hire_data_ym }}
+				{{ form.hire_date_ym }}
 			</div>
 		</div>
 
@@ -128,19 +147,16 @@ sen-mx {
 		</div>
 
 		<div class="container mt-5">
-			{% if employee_cd != null %}
+			{% if not form.employee_cd.value is None %}
 				<div class="row">
-					<div class="col-8">
-						<a href="/U-SWEB/master/employee/search">
-							<input id="btn-back" type="button" class="btn-lg btn-position-back btn" value="戻る" />
-						</a>
-					</div>
-					<div class="float-right">
-						<input id="btn-update" type="button" class="btn-lg btn-position-detail btn" value="更新" />
-					</div>
+<!-- 							<input id="btn-back" type="button" class="btn-lg btn-position btn" value="戻る" -->
+<!-- 							onclick="{{request.META.HTTP_REFERER}}"/> -->
+							<input id="btn-back" type="button" class="btn-lg btn-position btn-position-bk btn" value="戻る"
+							onClick="location.href='{% url 'app_usweb:employee_info_refer' %}'"/>
+						<input id="btn-update" type="submit" class="btn-lg btn-position btn" value="更新" />
 				</div>
 			{% else %}
-				<div class="float-right">
+				<div class="row">
 					<input id="btn-regist" type="submit" class="btn-lg btn-position btn" value="登録" />
 				</div>
 			{% endif %}
@@ -153,7 +169,7 @@ sen-mx {
 {% block load_js %}
 <script>
 	$(function() {
-		$("#id_hire_data_ym").datepicker({
+		$("#id_hire_date_ym").datepicker({
 			language : 'ja',
 			startView : 1,
 			format : 'yyyymm',
