@@ -23,6 +23,6 @@ class EmployeeInfoUpdateView(generic.UpdateView, LoginRequiredMixin):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
-        form.fields['employee_cd'].widget.attrs['disabled'] = 'disabled'
+        form.fields['employee_cd'].widget.attrs['readonly'] = 'readonly'
 
         return form
