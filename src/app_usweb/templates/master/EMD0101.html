@@ -158,11 +158,11 @@ input:read-only {
 <!-- 							onclick="{{request.META.HTTP_REFERER}}"/> -->
 							<input id="btn-back" type="button" class="btn-lg btn-position btn-position-bk btn" value="戻る"
 							onClick="location.href='{% url 'app_usweb:employee_info_refer' %}'"/>
-						<input id="btn-update" type="submit" class="btn-lg btn-position btn" value="更新" />
+						<input id="btn-update" type="submit" class="btn-lg btn-position btn" value="更新" onclick="funcdate()"/>
 				</div>
 			{% else %}
 				<div class="row">
-					<input id="btn-regist" type="submit" class="btn-lg btn-position btn" value="登録" />
+					<input id="btn-regist" type="submit" class="btn-lg btn-position btn" value="登録" onclick="funcdate()"/>
 				</div>
 			{% endif %}
 		</div>
@@ -187,12 +187,15 @@ input:read-only {
 
 	// 日付表示用フォーマット(数値6桁→YYYY年MM月)
 	$(window).on('load', function() {
-		$("#id_hire_date_ym_disp").val($("#id_hire_date_ym").val().substr(0,4)+"年"+$("#id_hire_date_ym").val().substr(4,6)+"月");
+		if($("#id_hire_date_ym").val()){
+			$("#id_hire_date_ym_disp").val($("#id_hire_date_ym").val().substr(0,4)+"年"+$("#id_hire_date_ym").val().substr(4,6)+"月");
+		}
 	});
 
 	// 日付form送信用フォーマット(YYYY年MM月→数値6桁)
-	$('#btn-update').on('click', function() {
+	function funcdate() {
 		$("#id_hire_date_ym").val($("#id_hire_date_ym_disp").val().replace(/[^0-9]/g, ''));
-		});
+		return true;
+	};
 </script>
  {% endblock %}
