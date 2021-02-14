@@ -1,0 +1,35 @@
+/*保有資格の入力フォーム*/
+sen-mx {
+	width: 270px !important;
+}
+
+.sen-numeric-emp {
+	text-align: center;
+	width: 180px !important;;
+	ime-mode: disabled;
+}
+
+.sen-required-position::before {
+	font-weight: bold;
+	color: #CC0000;
+	content: "＊";
+	margin-left: 30px
+}
+/*ボタンのレイアウト及び位置指定*/
+.btn-position {
+	position: relative;
+	left: 0.5%;
+	background-color: darkorange;
+	border-style: solid;
+	box-shadow: 1px 1px 2px;
+	margin: 0 5% 0 auto;
+}
+
+/*戻るボタン位置指定*/
+.btn-position-bk {
+	margin: 0 auto 0 0;
+}
+
+input:read-only {
+  background-color: #ccc;
+}

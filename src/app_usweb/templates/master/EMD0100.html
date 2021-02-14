@@ -1,4 +1,5 @@
 {% extends 'common/base.html' %}
+{% load static %}
 {% load item_extras %}
 
 <!--タイトル -->
@@ -6,49 +7,7 @@
 
 <!--個別CSS -->
 {% block load_css %}
-<style>
-/*保有資格の入力フォーム*/
-sen-mx {
-	width: 270px !important;
-}
-/*社員番号の入力フォーム*/
-.sen-numericW {
-	text-align: center;
-	width: 180px !important;;
-	ime-mode: disabled;
-}
-/*テーブルの社員番号*/
-.no {
-	text-align: center;
-	width: 13%;
-}
-
-.btn-em {
-	width: 65px;
-}
-
-.name {
-	width: 33%;
-}
-/*テーブルの入社年月日*/
-.date {
-	width: 10%;
-	text-align: center;
-}
-
-.qf {
-	width: 40%;
-}
-
-.btn-center {
-	text-align: center;
-}
-
-/*検索条件のサイズ合わせ*/
-.moji {
-	font-size: 25px
-}
-</style>
+<link rel="stylesheet" href="{% static 'app/css/employee/EMD0100.css' %}">
 {% endblock %}
 
 <!--メインコンテンツ -->
@@ -57,6 +16,16 @@ sen-mx {
 	<p class="title">社員マスタ検索</p>
 
     <!-- メッセージ表示 -->
+	{% if messages %}
+	<div class="alert alert-success alert-dismissible fade show" role="alert">
+		{% for message in messages %}
+			{{ message }}
+		{% endfor %}
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	{% endif %}
 	{% if err_msg %}
 		<div class="alert alert-danger alert-dismissible fade show" role="alert">
 			{{err_msg}}
@@ -125,10 +94,10 @@ sen-mx {
 					<td class="date">{{ employee.hire_date_ym }}</td>
 					<td class="qf">{% autoescape off %}{{ employee.qualification1 }}{% endautoescape %}</td>
 					<td style="vertical-align:middle"><input type="button" value="詳細" class="btn btn-info btn-md submitbtn" id = "${employee.employee_cd}"
-								onclick="location.href='{% url 'app_usweb:employee_info_update' employee.pk %}'"></td>
+								onclick="location.href='{% url 'app_usweb:employee_mst_update' employee.pk %}'"></td>
 					<td style="vertical-align:middle"><input type="button" class="btn btn-danger btn-md submitbtn btn-del" data-toggle="modal"
 								data-target="#deleteModal" data-pk="{{ employee.employee_cd }}"
-								data-url="{% url 'app_usweb:employee_info_delete' employee.pk %}" value="削除"></td>
+								data-url="{% url 'app_usweb:employee_mst_delete' employee.pk %}" value="削除"></td>
 				</tr>
 				{% endfor %}
 			</tbody>
@@ -158,23 +127,5 @@ sen-mx {
 
  <!--個別Javascript -->
 {% block load_js %}
-<script>
-	$(function() {
-		$("#hireDate").datepicker({
-			language : 'ja',
-			startView : 1,
-			format : 'yyyy年mm月',
-			autoclose : true,
-			immediateUpdates : true,
-			minViewMode : 1,
-			orientation : 'bottom',
-		});
-	});
-	$(function() {
-		  $('.btn-del').on('click', function () {
-		     $("#del_pk").text($(this).data("pk"));
-		     $('#del_url').attr('href', $(this).data("url"));
-		  });
-		});
-</script>
+<script type="text/javascript" src="{% static 'app/js/employee/EMD0100.js' %}"></script>
  {% endblock %}

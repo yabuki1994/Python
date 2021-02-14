@@ -1,18 +1,19 @@
 ###############################
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import generic
-from ...forms import EmployeeInfoRegistForm
-from ...models import employee
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from ...forms import EmployeeInfoRegistForm
+from ...models import employee
 
-class EmployeeInfoRegistView(generic.CreateView, LoginRequiredMixin):
+
+# 社員マスタ登録ビュークラス
+class EmployeeMstRegistView(CreateView, LoginRequiredMixin):
 
     model = employee
     template_name = 'master/EMD0101.html'
     form_class = EmployeeInfoRegistForm
-    success_url = reverse_lazy('app_usweb:employee_info_regist')
-    #Fields = ['employeeCd', 'employeeName', 'employeeNameKana', 'hireDateYm', 'hobby', 'qualification1', 'qualification2', 'qualification3']
+    success_url = reverse_lazy('app_usweb:employee_mst_regist')
 
     def form_valid(self, form):
         ''' バリデーションを通った時 '''

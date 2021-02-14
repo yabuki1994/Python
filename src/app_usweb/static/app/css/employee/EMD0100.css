@@ -1,0 +1,41 @@
+/*保有資格の入力フォーム*/
+sen-mx {
+	width: 270px !important;
+}
+/*社員番号の入力フォーム*/
+.sen-numericW {
+	text-align: center;
+	width: 180px !important;;
+	ime-mode: disabled;
+}
+/*テーブルの社員番号*/
+.no {
+	text-align: center;
+	width: 13%;
+}
+
+.btn-em {
+	width: 65px;
+}
+
+.name {
+	width: 33%;
+}
+/*テーブルの入社年月日*/
+.date {
+	width: 12%;
+	text-align: center;
+}
+
+.qf {
+	width: 40%;
+}
+
+.btn-center {
+	text-align: center;
+}
+
+/*検索条件のサイズ合わせ*/
+.moji {
+	font-size: 25px
+}

@@ -1,11 +1,14 @@
 ###############################
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import generic
-from ...models import employee
 from django.db.models import Q
+from django.views.generic import ListView
 from ...forms import EmployeeInfoRegistForm
+from ...models import employee
+import re
 
-class EmployeeInfoReferView(generic.ListView, LoginRequiredMixin):
+
+# 社員マスタ検索ビュークラス
+class EmployeeMstReferView(ListView, LoginRequiredMixin):
 
     model = employee
     template_name = 'master/EMD0100.html'
@@ -40,7 +43,7 @@ class EmployeeInfoReferView(generic.ListView, LoginRequiredMixin):
     def get_queryset(self):
         employeeCd = self.request.GET.get('employeeCd')
         employeeName = self.request.GET.get('employeeName')
-        hireDate = self.request.GET.get('hireDate')
+        hireDate = re.sub("\\D", "", str(self.request.GET.get('hireDate')))
         qualification1 = self.request.GET.get('qualification1')
         global errFlg
         errFlg = False

@@ -1,9 +1,10 @@
 {% extends 'common/base.html' %}
+{% load static %}
 {% load item_extras %}
 
 <!--タイトル -->
 {% block title %}
-	{% if form.employee_cd.value is None %}
+	{% if 'employee_mst_regist' in request.path %}
 		社員マスタ登録
 	{% else %}
 		社員マスタ更新
@@ -12,51 +13,14 @@
 
 <!--個別CSS -->
 {% block load_css %}
-<style>
-/*保有資格の入力フォーム*/
-sen-mx {
-	width: 270px !important;
-}
-
-.sen-numeric-emp {
-	text-align: center;
-	width: 180px !important;;
-	ime-mode: disabled;
-}
-
-.sen-required-position::before {
-	font-weight: bold;
-	color: #CC0000;
-	content: "＊";
-	margin-left: 30px
-}
-/*ボタンのレイアウト及び位置指定*/
-.btn-position {
-	position: relative;
-	left: 0.5%;
-	background-color: darkorange;
-	border-style: solid;
-	box-shadow: 1px 1px 2px;
-	margin: 0 5% 0 auto;
-}
-
-/*戻るボタン位置指定*/
-.btn-position-bk {
-	margin: 0 auto 0 0;
-}
-
-input:read-only {
-  background-color: #ccc;
-}
-
-</style>
+<link rel="stylesheet" href="{% static 'app/css/employee/EMD0101.css' %}">
 {% endblock %}
 
 <!--メインコンテンツ -->
 {% block contents %}
 <div class="sen-main-contents">
 	<p class="title">
-		{% if form.employee_cd.value is None %}
+		{% if 'employee_mst_regist' in request.path %}
 			<b>社員マスタ登録</b>
 		{% else %}
 			<b>社員マスタ更新</b>
@@ -77,7 +41,7 @@ input:read-only {
 	{% if form.errors.items %}
 		<div class="alert alert-danger alert-dismissible fade show" role="alert">
 			{% for key, value in form.errors.items %}
-				{% get_employee_label key %}{{value}}
+				{% get_employee_label key %}{{ value }}
 			{% endfor %}
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
@@ -90,7 +54,7 @@ input:read-only {
 	<form method="POST" name="check">
 		{% csrf_token %}
 		<br></br>
-		{% if form.employee_cd.value is None %}
+		{% if 'employee_mst_regist' in request.path %}
 			<p>	&emsp;&emsp;登録項目を入力してください。<b class="sen-required-position">は必須項目</b></p>
 		{% else %}
 			<p>&emsp;&emsp;更新項目を入力してください。<b class="sen-required-position">は必須項目</b></p>
@@ -152,12 +116,12 @@ input:read-only {
 		</div>
 
 		<div class="container mt-5">
-			{% if not form.employee_cd.value is None %}
+			{% if not 'employee_mst_regist' in request.path %}
 				<div class="row">
 <!-- 							<input id="btn-back" type="button" class="btn-lg btn-position btn" value="戻る" -->
 <!-- 							onclick="{{request.META.HTTP_REFERER}}"/> -->
 							<input id="btn-back" type="button" class="btn-lg btn-position btn-position-bk btn" value="戻る"
-							onClick="location.href='{% url 'app_usweb:employee_info_refer' %}'"/>
+							onClick="location.href='{% url 'app_usweb:employee_mst_refer' %}'"/>
 						<input id="btn-update" type="submit" class="btn-lg btn-position btn" value="更新" onclick="funcdate()"/>
 				</div>
 			{% else %}
@@ -172,30 +136,5 @@ input:read-only {
 
 <!--個別Javascript -->
 {% block load_js %}
-<script>
-	$(function() {
-		$("#id_hire_date_ym_disp").datepicker({
-			language : 'ja',
-			startView : 1,
-			format : 'yyyy年mm月',
-			autoclose : true,
-			immediateUpdates : true,
-			minViewMode : 1,
-			orientation : 'bottom',
-		});
-	});
-
-	// 日付表示用フォーマット(数値6桁→YYYY年MM月)
-	$(window).on('load', function() {
-		if($("#id_hire_date_ym").val()){
-			$("#id_hire_date_ym_disp").val($("#id_hire_date_ym").val().substr(0,4)+"年"+$("#id_hire_date_ym").val().substr(4,6)+"月");
-		}
-	});
-
-	// 日付form送信用フォーマット(YYYY年MM月→数値6桁)
-	function funcdate() {
-		$("#id_hire_date_ym").val($("#id_hire_date_ym_disp").val().replace(/[^0-9]/g, ''));
-		return true;
-	};
-</script>
+<script type="text/javascript" src="{% static 'app/js/employee/EMD0101.js' %}"></script>
  {% endblock %}
