@@ -55,7 +55,7 @@ class EmployeeInfoRegistForm(forms.ModelForm):
 #    employee_cd = forms.CharField(label='社員番号', max_length=6, required=False)
 #    employee_name = forms.CharField(label='氏名', max_length=15, required=False)
 #    employee_name_kana = forms.CharField(label='カナ氏名', max_length=30, required=False)
-#    hire_date_ym = forms.CharField(label='入社年月', max_digits=6, decimal_places=0, required=False)
+    hire_date_ym_disp = forms.CharField(label='入社年月', max_length=8)
 #    hobby = forms.CharField(label='趣味', max_length=10, required=False)
     qualification1 = myModelChoiceField(queryset=code.objects, label='保有資格1', empty_label='', to_field_name='code', required=False)
     qualification2 = myModelChoiceField(queryset=code.objects, label='保有資格2', empty_label='', to_field_name='code', required=False)
